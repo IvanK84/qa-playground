@@ -25,3 +25,12 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
+    - name: Publish HTML Report Preview 
+      if: always()
+      uses: pavi2410/html-preview-action@v5
+      with:
+        html_file: index.html
+        # The path to your Playwright index.html entry point
+        site_root: 'playwright-report'
+        upload: auto
+        job_summary: true
