@@ -7,7 +7,7 @@ A playground repository for experimenting with and testing various QA ideas, aut
 ```
 qa-playground/
 ├── components/                 # Reusable page components
-│   ├── todo/                 # Flow specific components
+│   ├── todo/                   # Flow specific components
 │   │   ├── main.ts
 │   │   └── ...
 │   ├── shared/                 # Components shared across the web
@@ -97,4 +97,4 @@ qa-playground/
 
 **VS Code Extension** - https://playwright.dev/docs/getting-started-vscode (especially the video tutorial)
 
-**GutHub Actions** - https://playwright.dev/docs/ci-intro#setting-up-github-actions
+**GitHub Actions** - https://playwright.dev/docs/ci-intro#setting-up-github-actions

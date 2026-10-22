@@ -12,8 +12,6 @@ type TodoFixtures = {
 export const test = base.extend<TodoFixtures>({
   headerComponent: async ({ page }, use) => {
     const header = new HeaderComponent(page);
-
-    await page.goto("");
     await use(header);
   },
 

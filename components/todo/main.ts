@@ -8,8 +8,7 @@ export class MainComponent {
   }
 
   async markAsDone(text: string) {
-    await this.page
-      .getByTestId("todo-item")
+    await this.todoItems
       .filter({ hasText: text })
       .getByLabel("Toggle Todo")
       .check();
@@ -19,14 +18,5 @@ export class MainComponent {
     const todo = this.todoItems.filter({ hasText: text });
     await todo.hover();
     await todo.getByLabel("Delete").click();
-  }
-
-  async removeAll() {
-    const checkedBoxes = this.todoItems.getByRole("checkbox");
-    const checkBoxArray = await checkedBoxes.all();
-    for (const checkbox of checkBoxArray) {
-      await checkbox.hover();
-      await checkbox.getByLabel("Delete").first().click();
-    }
   }
 }
