@@ -1,88 +1,84 @@
-import { test, expect } from '../fixtures/testBase';
+import { test, expect } from "../fixtures/testBase";
 
-test.describe('TODO Test', () => {
+test.describe("TODO Test Suite", () => {
+  test(
+    "Adds todos, verifies item count before and after marking some todos as complete ",
+    { tag: "@smoke" },
+    async ({ headerComponent, mainComponent, footerComponent }) => {
+      await test.step("Add some todos", async () => {
+        await headerComponent.addToDo("Buy bread");
+        await headerComponent.addToDo("Do dishes");
+        await headerComponent.addToDo("Call Cal");
+        await headerComponent.addToDo("Educate Eaton");
+      });
 
-  test('Full Scenario 4 items', async ({
-    page,
+      await test.step("Verify todo count", async () => {
+        await expect(footerComponent.todoCount).toHaveText("4 items left");
+      });
+
+      await test.step("Mark 'Do dishes' entry as done", async () => {
+        await mainComponent.markAsDone("Do dishes");
+      });
+
+      await test.step("Verify todo count again", async () => {
+        await expect(footerComponent.todoCount).toHaveText("3 items left");
+      });
+    },
+  );
+
+  test("Deletes a todo", async ({
     headerComponent,
     mainComponent,
-    footerComponent
+    footerComponent,
   }) => {
+    await test.step("Add some todos", async () => {
+      await headerComponent.addToDo("Buy bread");
+      await headerComponent.addToDo("Do dishes");
+      await headerComponent.addToDo("Call Cal");
+    });
 
-    await page.goto('https://demo.playwright.dev/todomvc/');
+    await test.step("Verify todo count", async () => {
+      await expect(footerComponent.todoCount).toHaveText("3 items left");
+    });
 
+    await test.step("Delete 'Call Cal' todo", async () => {
+      await mainComponent.remove("Call Cal");
+    });
 
-    // Add some todos
-    await headerComponent.addToDo('Buy bread');
-    await headerComponent.addToDo('Do dishes');
-    await headerComponent.addToDo('Call Cal');
-    await headerComponent.addToDo('Educate Eaton');
-
-    // Check todo count
-    const todoCount = await footerComponent.getTodoCount();
-    expect(todoCount).toBe("4 items left");
-
-    // Mark one entry as done
-    await mainComponent.markAsDone('Do dishes');
-
-    // Check todo count again
-    const todoCountAfterCheck = await footerComponent.getTodoCount();
-    expect(todoCountAfterCheck).toBe("3 items left");
+    await test.step("Verify todo count again", async () => {
+      await expect(footerComponent.todoCount).toHaveText("2 items left");
+    });
   });
 
-  test('Full Scenario 3 items', async ({
-    page,
+  test("Verifies filters", async ({
     headerComponent,
     mainComponent,
-    footerComponent
+    footerComponent,
   }) => {
+    await test.step("Add some todos", async () => {
+      await headerComponent.addToDo("Buy bread");
+      await headerComponent.addToDo("Do dishes");
+      await headerComponent.addToDo("Call Cal");
+    });
 
-    await page.goto('https://demo.playwright.dev/todomvc/');
+    await test.step("Mark 'Call Cal' todo as done", async () => {
+      await mainComponent.markAsDone("Call Cal");
+    });
 
+    await test.step("Filter Completed todos", async () => {
+      footerComponent.showCompleted();
+    });
 
-    // Add some todos
-    await headerComponent.addToDo('Buy bread');
-    await headerComponent.addToDo('Do dishes');
-    await headerComponent.addToDo('Call Cal');
+    await test.step("Verify Completed todo count", async () => {
+      await expect(mainComponent.todoItems).toHaveCount(1);
+    });
 
-    // Check todo count
-    const todoCount = await footerComponent.getTodoCount();
-    expect(todoCount).toBe("3 items left");
+    await test.step("Filter Active todos", async () => {
+      footerComponent.showActive();
+    });
 
-    // Mark one entry as done
-    await mainComponent.markAsDone('Do dishes');
-
-    // Check todo count again
-    const todoCountAfterCheck = await footerComponent.getTodoCount();
-    expect(todoCountAfterCheck).toBe("2 items left");
+    await test.step("Verify Active todo count", async () => {
+      await expect(mainComponent.todoItems).toHaveCount(2);
+    });
   });
-
-  test('Full Scenario 3 items, 2 checked', async ({
-    page,
-    headerComponent,
-    mainComponent,
-    footerComponent
-  }) => {
-
-    await page.goto('https://demo.playwright.dev/todomvc/');
-
-
-    // Add some todos
-    await headerComponent.addToDo('Buy bread');
-    await headerComponent.addToDo('Do dishes');
-    await headerComponent.addToDo('Call Cal');
-
-    // Check todo count
-    const todoCount = await footerComponent.getTodoCount();
-    expect(todoCount).toBe("3 items left");
-
-    // Mark one entry as done
-    await mainComponent.markAsDone('Do dishes');
-    await mainComponent.markAsDone('Buy bread');
-
-    // Check todo count again
-    const todoCountAfterCheck = await footerComponent.getTodoCount();
-    expect(todoCountAfterCheck).toBe("1 items left");
-  });
-
 });

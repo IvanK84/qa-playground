@@ -1,9 +1,7 @@
 {
   "name": "qa-playground",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {},
+  "scripts": {"test": "playwright test"},
   "keywords": [],
   "author": "",
   "license": "ISC",
