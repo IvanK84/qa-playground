@@ -34,11 +34,20 @@ export default defineConfig({
   // Fail the run after an hour, so that the reporters still produce a report.
   globalTimeout: 60 * 60 * 1000,
 
-  /* Configure projects for major browsers */
+  /* Configure projects, for example for major browsers */
   projects: [
     {
       name: "chromium",
+      testIgnore: /api\/.*\.spec\.ts/,
       use: { ...devices["Desktop Chrome"] },
+    },
+
+    {
+      name: "api",
+      testMatch: /api\/.*\.spec\.ts/,
+      use: {
+        baseURL: "https://restful-booker.herokuapp.com/",
+      },
     },
 
     // {
