@@ -1,6 +1,8 @@
+![Playwright Tests](https://github.com/IvanK84/qa-playground/actions/workflows/playwright.yml/badge.svg)
+
 # QA Playground
 
-A playground repository for experimenting with and testing various QA ideas, automation tools, and concepts.
+A playground repository for experimenting with and testing various QA ideas, automation tools and concepts; a small framework showing UI, API and DB checks with shared design.
 
 ## Test Scope
 
