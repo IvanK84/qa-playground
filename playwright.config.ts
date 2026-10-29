@@ -38,13 +38,21 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      testIgnore: /api\/.*\.spec\.ts/,
+      testIgnore: [/tests\/api\//, /tests\/db\//],
       use: { ...devices["Desktop Chrome"] },
     },
 
     {
       name: "api",
-      testMatch: /api\/.*\.spec\.ts/,
+      testMatch: /tests\/api\//,
+      use: {
+        baseURL: "https://restful-booker.herokuapp.com/",
+      },
+    },
+
+    {
+      name: "db",
+      testMatch: /tests\/db\//,
       use: {
         baseURL: "https://restful-booker.herokuapp.com/",
       },

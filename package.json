@@ -10,6 +10,10 @@
   "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.64.1",
+    "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^26.6.5"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3"
   }
 }

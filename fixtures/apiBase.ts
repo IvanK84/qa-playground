@@ -6,6 +6,9 @@ type ApiFixtures = {
   bookingClient: BookingClient;
   authToken: string;
   createdBooking: { id: number; booking: Booking };
+  createBooking: (
+    overrides?: Partial<Booking>,
+  ) => Promise<{ id: number; booking: Booking }>;
 };
 
 export const test = base.extend<ApiFixtures>({
@@ -22,15 +25,27 @@ export const test = base.extend<ApiFixtures>({
     await use(token);
   },
 
-  createdBooking: async ({ bookingClient, authToken }, use) => {
-    const booking = buildBooking();
-    const response = await bookingClient.create(booking);
-    expect(response.status()).toBe(200);
-    const { bookingid } = await response.json();
+  createdBooking: async ({ createBooking }, use) => {
+    await use(await createBooking());
+  },
 
-    await use({ id: bookingid, booking });
+  createBooking: async ({ bookingClient, authToken }, use) => {
+    const createdIds: number[] = [];
 
-    await bookingClient.remove(bookingid, authToken);
+    // The test receives this function and can call it as often as it likes
+    await use(async (overrides = {}) => {
+      const booking = buildBooking(overrides);
+      const response = await bookingClient.create(booking);
+      expect(response.status()).toBe(200);
+      const { bookingid } = await response.json();
+      createdIds.push(bookingid);
+      return { id: bookingid, booking };
+    });
+
+    // Teardown: runs after the test, even if the test failed
+    for (const id of createdIds) {
+      await bookingClient.remove(id, authToken);
+    }
   },
 });
 

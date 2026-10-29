@@ -6,6 +6,7 @@ A playground repository for experimenting with and testing various QA ideas, aut
 
 - **UI Tests**: End-to-end browser tests against TodoMVC using Component / Page Object patterns and custom fixtures.
 - **API Tests**: Headless HTTP REST API testing against [Restful-booker](https://restful-booker.herokuapp.com/) demonstrating Playwright `APIRequestContext`, reusable API clients, automatic auth token handling, and teardown fixtures.
+- **DB & Data Quality Tests**: In-memory SQLite (`better-sqlite3`) fixtures composed with API clients via Playwright's `mergeTests`. Ingests API responses into SQL tables to perform relational data integrity checks, duplicate detection, date chronology assertions, and constraint validations.
 
 ## Framework Folder Structure
 
@@ -22,18 +23,21 @@ qa-playground/
 │   │   ├── header.ts
 │   │   └── footer.ts
 │   └── ...
-│
-├── fixtures/                   # Environment config and custom fixtures
+├── db/                         # Database helpers and schema definitions
+│   └── bookingDb.ts            # In-memory SQLite DB wrapper (better-sqlite3)
+├── fixtures/                   # Custom fixtures and test setup
 │   ├── testBase.ts             # UI fixtures (component injection, navigation)
-│   └── apiBase.ts              # API fixtures (clients, auth token, data teardown)
-│
+│   ├── apiBase.ts              # API fixtures (clients, auth token, teardown)
+│   ├── dbBase.ts               # DB fixture with automatic lifecycle cleanup
+│   └── dbApiBase.ts            # Composed fixture merging API and DB via mergeTests
 ├── tests/                      # Test scenarios (.spec.ts)
 │   ├── api/                    # API test suites
 │   │   └── booking.spec.ts
+│   ├── db/                     # Database & data quality test suites
+│   │   └── bookingData.spec.ts
 │   ├── todoMvc.spec.ts         # UI test suites
 │   └── example.spec.ts
-│
-├── playwright.config.ts        # Global Playwright config (projects for UI & API)
+├── playwright.config.ts        # Global Playwright config (projects: chromium, api, db)
 └── package.json
 ```
 
@@ -127,13 +131,37 @@ qa-playground/
   npx playwright test tests/api/booking.spec.ts
   ```
 
+### Database & Data Quality Tests
+
+- **Run DB tests only (project):**
+
+  ```bash
+  npx playwright test --project=db
+  ```
+
+- **Run DB tests by tag:**
+
+  ```bash
+  npx playwright test --grep "@db"
+  ```
+
+- **Run a specific DB test file:**
+
+  ```bash
+  npx playwright test tests/db/bookingData.spec.ts
+  ```
+
 ## Used resources:
 
 **Playwright Intro** - https://playwright.dev/docs/intro
 
 **Playwright API Testing** - https://playwright.dev/docs/api-testing
 
+**Playwright Test Merging & Fixtures** - https://playwright.dev/docs/test-fixtures#combine-custom-fixtures
+
 **Restful-booker API Playground** - https://restful-booker.herokuapp.com/
+
+**better-sqlite3** - https://github.com/WiseLibs/better-sqlite3
 
 **VS Code Extension** - https://playwright.dev/docs/getting-started-vscode (especially the video tutorial)
 
